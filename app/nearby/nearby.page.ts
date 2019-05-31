@@ -16,6 +16,9 @@ export class NearbyPage implements OnInit {
   // field
   public nearbySameBuilding = [];
   public nearbyNextBuilding = [];
+  private onlyCold : boolean = false;
+  private onlyWarm : boolean = false;
+  private onlyHot : boolean = false;
 
   // dummy data for test
   dummyDeviceId: String = "MA_05_01";
@@ -36,9 +39,27 @@ export class NearbyPage implements OnInit {
     this.main();
   }
 
-  coldFilter () {}
-  warmFilter () {}
-  hotFilter () {}
+  coldFilter () {
+    if (this.onlyCold == false)
+      this.onlyCold = true;
+    else
+      this.onlyCold = false;
+    console.log(this.onlyCold);
+  }
+  warmFilter () {
+    if (this.onlyWarm == false)
+      this.onlyWarm = true;
+    else
+      this.onlyWarm = false;
+    console.log(this.onlyWarm);
+  }
+  hotFilter () {
+    if (this.onlyHot == false)
+      this.onlyHot = true;
+    else
+      this.onlyHot = false;
+    console.log(this.onlyHot);
+  }
 
   /**
    * Parameter needed to be mapped into page:
@@ -62,26 +83,23 @@ export class NearbyPage implements OnInit {
       let dispenserDetails = await this.getDetails(dispenserId);
       let dispenserPicture = await this.getPicture(dispenserId);
 
-      // if (getNearbyDispenserJson[i]['Status'] == "1") {
-        let dispenserBuildingLoc = await this.getBuildingLocation(dispenserDetails);
-        let tempAllDetails = {
-          'Device_ID': dispenserId,
-          'Status': getNearbyDispenserJson[i]['Status'],
-          'HotTemp': getNearbyDispenserJson[i]['HotTemp'],
-          'WarmTemp': getNearbyDispenserJson[i]['WarmTemp'],
-          'ColdTemp': getNearbyDispenserJson[i]['ColdTemp'],
-          'Building': dispenserDetails['Building'],
-          'Position': dispenserDetails['Position'],
-          'Picture': dispenserPicture
-        };
+      let dispenserBuildingLoc = await this.getBuildingLocation(dispenserDetails);
+      let tempAllDetails = {
+        'Device_ID': dispenserId,
+        'Status': getNearbyDispenserJson[i]['Status'],
+        'HotTemp': getNearbyDispenserJson[i]['HotTemp'],
+        'WarmTemp': getNearbyDispenserJson[i]['WarmTemp'],
+        'ColdTemp': getNearbyDispenserJson[i]['ColdTemp'],
+        'Building': dispenserDetails['Building'],
+        'Position': dispenserDetails['Position'],
+        'Picture': dispenserPicture
+      };
 
-        if (dispenserBuildingLoc == currentBuildingLocation) {
-          this.nearbySameBuilding.push(tempAllDetails);
-        } else {
-          this.nearbyNextBuilding.push(tempAllDetails);
-        }
-
-      // } // end IF status
+      if (dispenserBuildingLoc == currentBuildingLocation) {
+        this.nearbySameBuilding.push(tempAllDetails);
+      } else {
+        this.nearbyNextBuilding.push(tempAllDetails);
+      }
 
     } // end FOR
 

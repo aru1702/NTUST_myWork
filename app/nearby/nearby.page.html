@@ -43,17 +43,26 @@
       </div>
       <div class="filter-content--options">
         <div class="filter-content--options-item">
-          <ion-button (click)="coldFilter()" class="btn-deactived" size="small" fill="solid" expand="block">
+          <ion-button (click)="coldFilter()" class="btn-deactived" size="small" fill="solid" expand="block" *ngIf="onlyCold == false">
+            Cold
+          </ion-button>
+          <ion-button (click)="coldFilter()" class="btn-cold-activated" size="small" fill="solid" expand="block" *ngIf="onlyCold == true">
             Cold
           </ion-button>
         </div>
         <div class="filter-content--options-item">
-          <ion-button (click)="warmFilter()" class="btn-deactived" size="small" fill="solid" expand="block">
+          <ion-button (click)="warmFilter()" class="btn-deactived" size="small" fill="solid" expand="block" *ngIf="onlyWarm == false">
+            Warm
+          </ion-button>
+          <ion-button (click)="warmFilter()" class="btn-warm-activated" size="small" fill="solid" expand="block" *ngIf="onlyWarm == true">
             Warm
           </ion-button>
         </div>
         <div class="filter-content--options-item">
-          <ion-button (click)="hotFilter()" class="btn-deactived" size="small" fill="solid" expand="block">
+          <ion-button (click)="hotFilter()" class="btn-deactived" size="small" fill="solid" expand="block" *ngIf="onlyHot == false">
+            Hot
+          </ion-button>
+          <ion-button (click)="hotFilter()" class="btn-hot-activated" size="small" fill="solid" expand="block" *ngIf="onlyHot == true">
             Hot
           </ion-button>
         </div>
@@ -91,6 +100,10 @@
                   {{item.Building}}
                   <br>
                   {{item.Position}}
+                </div>
+
+                <div class="body-content--card-item--content-options" *ngIf="item.Status == 0">
+                  <span style="color: white; font-size: 18px"><b>Status unavailable</b></span>
                 </div>
                 
                 <div class="body-content--card-item--content-options">
