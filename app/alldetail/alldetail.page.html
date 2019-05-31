@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>DISPENSER LIST</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let item of items">
+      Device_ID: {{item.Device_ID}} <br>
+      Building: {{item.Building}} <br>
+      Position: {{item.Position}} <br>
+      Type: {{item.Type}} <br><br>
+    </ion-item>
+  </ion-list>
+</ion-content>

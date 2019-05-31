@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+      
+    <ion-item (click)="login()">
+      <ion-label>Login Page</ion-label>
+    </ion-item>
+
+    <ion-item (click)="register()">
+      <ion-label>Register Page</ion-label>
+    </ion-item>
+
+    <ion-item (click)="nearby()">
+      <ion-label>Get Nearby Machine</ion-label>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-list>
+    <ion-item (click)="gettoken()">
+      <ion-label>Get Token</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <h3>My token: {{ token }}</h3>
+</ion-content>
