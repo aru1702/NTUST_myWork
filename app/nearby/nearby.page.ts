@@ -18,10 +18,7 @@ export class NearbyPage implements OnInit {
   public nearbyNextBuilding = [];
 
   // dummy data for test
-  dummyDeviceId: String = "MA_B1_01";
-
-  public items = [{"name": "name1", "date": "01/01/18"},{"name": "name2", "date": "01/01/18"},{"name": 
-  "name3", "date": "01/01/18"}]
+  dummyDeviceId: String = "MA_05_01";
 
   constructor(
     public http: HttpClient
@@ -57,19 +54,15 @@ export class NearbyPage implements OnInit {
    */
   async main () {
     let currentDispenserDetails = await this.getDetails(this.dummyDeviceId);
-    let currentBuildingLocation = await this.getBuildingLocation(currentDispenserDetails);
-    
+    let currentBuildingLocation = await this.getBuildingLocation(currentDispenserDetails);  
     let getNearbyDispenserJson = await this.getNearby(this.dummyDeviceId);
+    
     for (let i = 0 ; i < getNearbyDispenserJson.length ; i++) {
-      console.log(i);
-
       let dispenserId = getNearbyDispenserJson[i]['Device_ID'];
       let dispenserDetails = await this.getDetails(dispenserId);
       let dispenserPicture = await this.getPicture(dispenserId);
 
-      if (getNearbyDispenserJson[i]['Status'] == "1") {
-        console.log("into status 1");
-
+      // if (getNearbyDispenserJson[i]['Status'] == "1") {
         let dispenserBuildingLoc = await this.getBuildingLocation(dispenserDetails);
         let tempAllDetails = {
           'Device_ID': dispenserId,
@@ -82,17 +75,13 @@ export class NearbyPage implements OnInit {
           'Picture': dispenserPicture
         };
 
-        console.log(tempAllDetails);
-
         if (dispenserBuildingLoc == currentBuildingLocation) {
           this.nearbySameBuilding.push(tempAllDetails);
         } else {
           this.nearbyNextBuilding.push(tempAllDetails);
         }
 
-      } // end IF status
-
-      console.log("done");
+      // } // end IF status
 
     } // end FOR
 
@@ -104,23 +93,7 @@ export class NearbyPage implements OnInit {
 
   async getNearby (device_id) {
     let myUrl = this.urlNearby + device_id;
-
     let myJson = await this.http.get(myUrl).toPromise();
-    // let myNearbyData = myJson['Data'];
-
-    // let getDispenserData = [];
-    // for (let i = 0 ; i < myNearbyData.length ; i++) {
-    //   getDispenserData.push({
-    //     'Device_ID': myNearbyData[i]['Device_ID'],
-    //     'UploadTime': myNearbyData[i]['UploadTime'],
-    //     'Status': myNearbyData[i]['Status'],
-    //     'HotTemp': myNearbyData[i]['HotTemp'],
-    //     'WarmTemp': myNearbyData[i]['WarmTemp'],
-    //     'ColdTemp': myNearbyData[i]['ColdTemp']
-    //   });
-    // }
-
-    // return getDispenserData;
 
     return myJson['Data'];
   }
@@ -128,16 +101,7 @@ export class NearbyPage implements OnInit {
   async getDetails (device_id) {
     let myUrl = this.urlDetails + device_id;
     let myJson = await this.http.get(myUrl).toPromise();
-
-    // let myDetails = {
-    //   'Device_ID': myJson['Data']['Device_ID'],
-    //   'Building': myJson['Data']['Building'],
-    //   'Position': myJson['Data']['Position'],
-    //   'Type': myJson['Data']['Type']
-    // };
-
-    // return myDetails;
-
+    
     return myJson['Data'];
   }
 
@@ -147,7 +111,6 @@ export class NearbyPage implements OnInit {
     /**
      * @return  myImage  very big image
      */
-    
     // let myImage = await this.http.get(myUrl).toPromise();
     // return myImage;
 
@@ -158,8 +121,6 @@ export class NearbyPage implements OnInit {
   }
 
   async getBuildingLocation (detailsJson) {
-    console.log(detailsJson);
-
     let myBuilding = detailsJson['Building'];
     let mbSplit = myBuilding.split(" ");
     let tempString = "";
@@ -168,35 +129,7 @@ export class NearbyPage implements OnInit {
       tempString += mbSplit[i] + " ";
     }
 
-    return tempString.trim;
+    return tempString.trim();
   }
 
-  // async BAK () {
-  //   let result = await this.getDetails("MA_B1_01");
-  //   let myBuilding = result['Building'];
-    
-  //   let splitString = myBuilding.split(" ");
-  //   let tempInt = splitString.length - 1;
-
-  //   let tempString = "";
-
-  //   for (let i = 0 ; i < tempInt ; i++) {
-  //     tempString += splitString[i] + " ";
-  //   }
-
-  //   let resultString = splitString[tempInt];
-    
-  //   console.log(resultString);
-  //   console.log("tempString: " + tempString);
-
-  //   let s = "Management Building";
-    
-  //   console.log("s: " + s);
-    
-  //   if (tempString.trim == s.trim){
-  //     console.log("yay it's equal!");
-  //   } else {
-  //     console.log("something wrong");
-  //   }
-  // }
 }

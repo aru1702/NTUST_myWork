@@ -69,8 +69,12 @@
     <div class="body-content">
 
       <h3>In this building</h3>
+
+      <div class="body-content--card-inside" style="text-align: center" *ngIf="nearbySameBuilding.length == 0">
+        <b>No item is available</b>
+      </div>
   
-      <ion-card *ngFor="let item of items" >
+      <ion-card *ngFor="let item of nearbySameBuilding" >
   
         <div class="body-content--card">
           <div class="overlay body-content--card-inside">
@@ -82,24 +86,23 @@
               </div>
   
               <!-- dispenser detail -->
-              <div class="body-content--card-item--content float-left">
+              <div class="body-content--card-item--content float-left">                
                 <div class="body-content--card-item--content-title">
-                  This is the building position ...
+                  {{item.Building}}
                   <br>
-                  ... and this is the dispenser position
+                  {{item.Position}}
                 </div>
                 
                 <div class="body-content--card-item--content-options">
-                  <div class="body-content--card-item--content-options-item float-left color-cold">
+                  <div class="body-content--card-item--content-options-item float-left color-cold" *ngIf="item.ColdTemp != 0">
                     Cold
                   </div>
-                  <div class="body-content--card-item--content-options-item float-left color-warm">
+                  <div class="body-content--card-item--content-options-item float-left color-warm" *ngIf="item.WarmTemp != 0">
                     Warm
                   </div>
-                  <div class="body-content--card-item--content-options-item float-left color-hot">
+                  <div class="body-content--card-item--content-options-item float-left color-hot" *ngIf="item.HotTemp != 0">
                     Hot
                   </div>
-
                 </div>
               </div>
 
@@ -116,8 +119,12 @@
     <div class="body-content">
 
       <h3>In nearby building</h3>
+
+      <div class="body-content--card-inside" style="text-align: center" *ngIf="nearbyNextBuilding.length == 0">
+        <b>No item is available</b>
+      </div>
   
-      <ion-card *ngFor="let item of items" >
+      <ion-card *ngFor="let item of nearbyNextBuilding" >
   
         <div class="body-content--card">
           <div class="overlay body-content--card-inside">
@@ -131,22 +138,25 @@
               <!-- dispenser detail -->
               <div class="body-content--card-item--content float-left">
                 <div class="body-content--card-item--content-title">
-                  This is the building position ...
+                  {{item.Building}}
                   <br>
-                  ... and this is the dispenser position
+                  {{item.Position}}
+                </div>
+
+                <div class="body-content--card-item--content-options" *ngIf="item.Status == 0">
+                  <span style="color: white; font-size: 18px"><b>Status unavailable</b></span>
                 </div>
                 
                 <div class="body-content--card-item--content-options">
-                  <div class="body-content--card-item--content-options-item float-left color-cold">
+                  <div class="body-content--card-item--content-options-item float-left color-cold" *ngIf="item.ColdTemp != 0">
                     Cold
                   </div>
-                  <div class="body-content--card-item--content-options-item float-left color-warm">
+                  <div class="body-content--card-item--content-options-item float-left color-warm" *ngIf="item.WarmTemp != 0">
                     Warm
                   </div>
-                  <div class="body-content--card-item--content-options-item float-left color-hot">
+                  <div class="body-content--card-item--content-options-item float-left color-hot" *ngIf="item.HotTemp != 0">
                     Hot
                   </div>
-
                 </div>
               </div>
 
