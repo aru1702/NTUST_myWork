@@ -33,7 +33,7 @@ export class HomePage {
   }
 
   nearby() {
-    this.router.navigate(['nearby']);
+    this.router.navigate(['to-nearby']);
   }
 
   async gettoken() {

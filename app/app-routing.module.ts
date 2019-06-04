@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'nearby', loadChildren: './nearby/nearby.module#NearbyPageModule' },
   { path: 'test-double-json', loadChildren: './test-double-json/test-double-json.module#TestDoubleJSONPageModule' },
   { path: 'alldetail', loadChildren: './alldetail/alldetail.module#AlldetailPageModule' },
+  { path: 'to-nearby', loadChildren: './to-nearby/to-nearby.module#ToNearbyPageModule' },
 ];
 
 @NgModule({
