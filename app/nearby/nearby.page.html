@@ -82,48 +82,50 @@
       <div class="body-content--card-inside" style="text-align: center" *ngIf="nearbySameBuilding.length == 0">
         <b>No item is available</b>
       </div>
-  
-      <ion-card *ngFor="let item of nearbySameBuilding" >
-  
-        <div class="body-content--card">
-          <div class="overlay body-content--card-inside">
-            <div class="body-content--card-item">
 
-              <!-- dispenser icon -->
-              <div class="float-left">
-                <img class="body-content--card-item--icon" src="assets\acuo-avatar\group-6@3x.png" alt="avatar">
+      <div *ngIf="resultDone == true">
+        <ion-card *ngFor="let item of nearbySameBuilding" >
+
+          <div class="body-content--card">
+            <div class="overlay body-content--card-inside">
+              <div class="body-content--card-item">
+  
+                <!-- dispenser icon -->
+                <div class="float-left">
+                  <img class="body-content--card-item--icon" src="assets\acuo-avatar\group-6@3x.png" alt="avatar">
+                </div>
+    
+                <!-- dispenser detail -->
+                <div class="body-content--card-item--content float-left">                
+                  <div class="body-content--card-item--content-title">
+                    {{item.Building}}
+                    <br>
+                    {{item.Position}}
+                  </div>
+  
+                  <div class="body-content--card-item--content-options" *ngIf="item.Status == 0">
+                    <span style="color: white; font-size: 18px"><b>Status unavailable</b></span>
+                  </div>
+                  
+                  <div class="body-content--card-item--content-options" *ngIf="item.Status != 0">
+                    <div class="body-content--card-item--content-options-item float-left color-cold" *ngIf="item.ColdTemp > 0">
+                      Cold
+                    </div>
+                    <div class="body-content--card-item--content-options-item float-left color-warm" *ngIf="item.WarmTemp > 0">
+                      Warm
+                    </div>
+                    <div class="body-content--card-item--content-options-item float-left color-hot" *ngIf="item.HotTemp > 0">
+                      Hot
+                    </div>
+                  </div>
+                </div>
+  
               </div>
-  
-              <!-- dispenser detail -->
-              <div class="body-content--card-item--content float-left">                
-                <div class="body-content--card-item--content-title">
-                  {{item.Building}}
-                  <br>
-                  {{item.Position}}
-                </div>
-
-                <div class="body-content--card-item--content-options" *ngIf="item.Status == 0">
-                  <span style="color: white; font-size: 18px"><b>Status unavailable</b></span>
-                </div>
-                
-                <div class="body-content--card-item--content-options">
-                  <div class="body-content--card-item--content-options-item float-left color-cold" *ngIf="item.ColdTemp != 0">
-                    Cold
-                  </div>
-                  <div class="body-content--card-item--content-options-item float-left color-warm" *ngIf="item.WarmTemp != 0">
-                    Warm
-                  </div>
-                  <div class="body-content--card-item--content-options-item float-left color-hot" *ngIf="item.HotTemp != 0">
-                    Hot
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
-        </div>
-
-      </ion-card>
+  
+        </ion-card>
+      </div>
 
     </div>
 
@@ -136,48 +138,50 @@
       <div class="body-content--card-inside" style="text-align: center" *ngIf="nearbyNextBuilding.length == 0">
         <b>No item is available</b>
       </div>
-  
-      <ion-card *ngFor="let item of nearbyNextBuilding" >
-  
-        <div class="body-content--card">
-          <div class="overlay body-content--card-inside">
-            <div class="body-content--card-item">
 
-              <!-- dispenser icon -->
-              <div class="float-left">
-                <img class="body-content--card-item--icon" src="assets\acuo-avatar\group-6@3x.png" alt="avatar">
+      <div *ngIf="resultDone == true">
+        <ion-card *ngFor="let item of nearbyNextBuilding" >
+
+          <div class="body-content--card">
+            <div class="overlay body-content--card-inside">
+              <div class="body-content--card-item">
+  
+                <!-- dispenser icon -->
+                <div class="float-left">
+                  <img class="body-content--card-item--icon" src="assets\acuo-avatar\group-6@3x.png" alt="avatar">
+                </div>
+    
+                <!-- dispenser detail -->
+                <div class="body-content--card-item--content float-left">
+                  <div class="body-content--card-item--content-title">
+                    {{item.Building}}
+                    <br>
+                    {{item.Position}}
+                  </div>
+  
+                  <div class="body-content--card-item--content-options" *ngIf="item.Status == 0">
+                    <span style="color: white; font-size: 18px"><b>Status unavailable</b></span>
+                  </div>
+                  
+                  <div class="body-content--card-item--content-options" *ngIf="item.Status != 0">
+                    <div class="body-content--card-item--content-options-item float-left color-cold" *ngIf="item.ColdTemp > 0">
+                      Cold
+                    </div>
+                    <div class="body-content--card-item--content-options-item float-left color-warm" *ngIf="item.WarmTemp > 0">
+                      Warm
+                    </div>
+                    <div class="body-content--card-item--content-options-item float-left color-hot" *ngIf="item.HotTemp > 0">
+                      Hot
+                    </div>
+                  </div>
+                </div>
+  
               </div>
-  
-              <!-- dispenser detail -->
-              <div class="body-content--card-item--content float-left">
-                <div class="body-content--card-item--content-title">
-                  {{item.Building}}
-                  <br>
-                  {{item.Position}}
-                </div>
-
-                <div class="body-content--card-item--content-options" *ngIf="item.Status == 0">
-                  <span style="color: white; font-size: 18px"><b>Status unavailable</b></span>
-                </div>
-                
-                <div class="body-content--card-item--content-options">
-                  <div class="body-content--card-item--content-options-item float-left color-cold" *ngIf="item.ColdTemp != 0">
-                    Cold
-                  </div>
-                  <div class="body-content--card-item--content-options-item float-left color-warm" *ngIf="item.WarmTemp != 0">
-                    Warm
-                  </div>
-                  <div class="body-content--card-item--content-options-item float-left color-hot" *ngIf="item.HotTemp != 0">
-                    Hot
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
-        </div>
-
-      </ion-card>
+  
+        </ion-card>
+      </div>
 
     </div>
 

@@ -16,9 +16,13 @@ export class NearbyPage implements OnInit {
   // field
   public nearbySameBuilding = [];
   public nearbyNextBuilding = [];
+  private tempSameBuilding = [];
+  private tempNextBuilding = [];
+
   private onlyCold : boolean = false;
   private onlyWarm : boolean = false;
   private onlyHot : boolean = false;
+  private resultDone: boolean = false;
 
   // dummy data for test
   dummyDeviceId: String = "MA_05_01";
@@ -40,24 +44,38 @@ export class NearbyPage implements OnInit {
   }
 
   coldFilter () {
-    if (this.onlyCold == false)
-      this.onlyCold = true;
-    else
-      this.onlyCold = false;
+    if (this.resultDone) {
+      if (!this.onlyCold)
+        this.onlyCold = true;
+      else
+        this.onlyCold = false;
+      
+      this.conditionalFilter();
+    }
     console.log(this.onlyCold);
   }
+  
   warmFilter () {
-    if (this.onlyWarm == false)
-      this.onlyWarm = true;
-    else
-      this.onlyWarm = false;
+    if (this.resultDone) {
+      if (!this.onlyWarm)
+        this.onlyWarm = true;
+      else
+        this.onlyWarm = false;
+    }
+
+    this.conditionalFilter();
     console.log(this.onlyWarm);
   }
+  
   hotFilter () {
-    if (this.onlyHot == false)
-      this.onlyHot = true;
-    else
-      this.onlyHot = false;
+    if (this.resultDone) {
+      if (!this.onlyHot)
+        this.onlyHot = true;
+      else
+        this.onlyHot = false;
+    }
+
+    this.conditionalFilter();
     console.log(this.onlyHot);
   }
 
@@ -96,17 +114,20 @@ export class NearbyPage implements OnInit {
       };
 
       if (dispenserBuildingLoc == currentBuildingLocation) {
-        this.nearbySameBuilding.push(tempAllDetails);
+        this.tempSameBuilding.push(tempAllDetails);
       } else {
-        this.nearbyNextBuilding.push(tempAllDetails);
+        this.tempNextBuilding.push(tempAllDetails);
       }
+
+      // if (dispenserBuildingLoc == currentBuildingLocation) {
+      //   this.nearbySameBuilding.push(tempAllDetails);
+      // } else {
+      //   this.nearbyNextBuilding.push(tempAllDetails);
+      // }
 
     } // end FOR
 
-    console.log("This is dispenser in same building:")
-    console.log(this.nearbySameBuilding);
-    console.log("and this is dispenser in next building:")
-    console.log(this.nearbyNextBuilding);
+    this.conditionalFilter();
   }
 
   async getNearby (device_id) {
@@ -150,4 +171,42 @@ export class NearbyPage implements OnInit {
     return tempString.trim();
   }
 
+  conditionalFilter () {
+    this.resultDone = false;
+
+    this.nearbySameBuilding = this.tempSameBuilding;
+    this.nearbyNextBuilding = this.tempNextBuilding;
+
+    if (this.onlyCold) {
+      this.nearbySameBuilding = this.nearbySameBuilding.filter((item) => {
+        return item['ColdTemp'] > 0;
+      });
+
+      this.nearbyNextBuilding = this.nearbyNextBuilding.filter((item) => {
+        return item['ColdTemp'] > 0;
+      });
+    }
+
+    if (this.onlyWarm) {
+      this.nearbySameBuilding = this.nearbySameBuilding.filter((item) => {
+        return item['WarmTemp'] > 0;
+      });
+
+      this.nearbyNextBuilding = this.nearbyNextBuilding.filter((item) => {
+        return item['WarmTemp'] > 0;
+      });
+    }
+
+    if (this.onlyHot) {
+      this.nearbySameBuilding = this.nearbySameBuilding.filter((item) => {
+        return item['HotTemp'] > 0;
+      });
+
+      this.nearbyNextBuilding = this.nearbyNextBuilding.filter((item) => {
+        return item['HotTemp'] > 0;
+      });
+    }
+
+    this.resultDone = true;
+  }
 }
