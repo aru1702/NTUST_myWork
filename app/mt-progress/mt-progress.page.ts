@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MtProgressPage implements OnInit {
 
+  items: any = [1, 2, 3,1,1,1,1,1,1,1];
+
   constructor() { }
 
   ngOnInit() {

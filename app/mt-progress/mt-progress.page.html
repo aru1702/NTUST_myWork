@@ -33,70 +33,45 @@
   </div>
 
   <!-- estimate -->
-  <div style="
-    margin: 20px 40px;
-    padding: 30px 0;
-    border-radius: 5px;
-    text-align: center;
-    background-color: #EDEDED;
-    color: #444444;
-    overflow: auto;">
+  <div class="estimate">
     <div>
-      <img style="
-        max-height: 100px;
-        width: auto;"
-        src="assets\cup-coffee\rectangle_3@3x.png" alt="alert">
+      <img 
+        class="estimate-icon" 
+        src="assets\cup-coffee\rectangle_3@3x.png" 
+        alt="alert"
+      >
     </div>
-    <div style="
-      margin-top: 15px">
+    <div class="estimate-title">
       <b>Report submitted</b>
     </div>
-    <div style="
-      margin-top: 10px">
+    <div class="estimate-subtitle">
       Estimated completion time: 5 hours later
     </div>
   </div>
 
   <!-- progress -->
-  <div style="
-    margin: 20px 40px;
-    padding: 30px auto">
-    
-    <!-- content -->
-    <div style="
-      padding: auto 20px;
-      min-height: 100px;">
+  <div class="progress">
 
-      <!-- left -->
-      <div class="float-left">
+    <!-- make a list -->
+    <ul>
+      <li *ngFor="let item of items; let i=index">
 
-        <!-- dot -->
-        <div style="
-          margin: auto;
-          height: 15px;
-          width: 15px;
-          overflow: auto;
-          border-radius: 50%;
-          background-color: #3880ff"></div>
+        <!-- left side the dot -->
+        <div class="fa"></div>
 
-        <!-- line -->
-        <div style="
-          margin: auto;
-          width: 5px;
-          min-height: 50px;
-          background-color: #EDEDED"></div>
-      </div>
+        <!-- right side the content with left border -->
+        <div class="fi">
+          {{i+1}} Here is the date...
+          <br>
+          .. and its details ..
+          <br>
+          .. more details ..
+          <br>
+          .. more details ..
+        </div>
 
-      <!-- right with text -->
-      <div style="
-        padding-left: 30px">
-        2018-12-24 24:27
-        <br>
-        Waiting for confirmation
-      </div>
-    </div>
-
-    adasd
+      </li>
+    </ul>
 
   </div>
 
