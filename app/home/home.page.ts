@@ -36,6 +36,10 @@ export class HomePage {
     this.router.navigate(['to-nearby']);
   }
 
+  mtProgress() {
+    this.router.navigate(['mt-progress']);
+  }
+
   async gettoken() {
     let postData = {
       "UserName": "pwa_user001",

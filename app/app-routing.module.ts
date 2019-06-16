@@ -14,6 +14,9 @@ const routes: Routes = [
   { path: 'test-double-json', loadChildren: './test-double-json/test-double-json.module#TestDoubleJSONPageModule' },
   { path: 'alldetail', loadChildren: './alldetail/alldetail.module#AlldetailPageModule' },
   { path: 'to-nearby', loadChildren: './to-nearby/to-nearby.module#ToNearbyPageModule' },
+  { path: 'mt-progress', loadChildren: './mt-progress/mt-progress.module#MtProgressPageModule' },
+  { path: 'to-mt-progress', loadChildren: './to-mt-progress/to-mt-progress.module#ToMtProgressPageModule' },
+  { path: 'test-timeline', loadChildren: './test-timeline/test-timeline.module#TestTimelinePageModule' },
 ];
 
 @NgModule({

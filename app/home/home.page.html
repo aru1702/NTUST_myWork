@@ -5,6 +5,8 @@
 </ion-header>
 
 <ion-content>
+  <br><br>
+  <ion-title>Register and Login</ion-title>
   <ion-list>
       
     <ion-item (click)="login()">
@@ -17,17 +19,19 @@
 
   </ion-list>
 
-  <ion-list>
-    <ion-item (click)="gettoken()">
-      <ion-label>Get Token</ion-label>
-    </ion-item>
-  </ion-list>
-
-  <h3>My token: {{ token }}</h3>
-
+  <br><br>
+  <ion-title>Nearby Dispenser</ion-title>
   <ion-list>
     <ion-item (click)="nearby()">
       <ion-label>Get Nearby Machine</ion-label>
     </ion-item>
   </ion-list>
+
+  <br><br>
+  <ion-title>Maintenance Progress</ion-title>
+  <ion-list>
+      <ion-item (click)="mtProgress()">
+        <ion-label>Maintenance Progress</ion-label>
+      </ion-item>
+    </ion-list>
 </ion-content>
