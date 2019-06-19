@@ -45,7 +45,7 @@
       <b>Report submitted</b>
     </div>
     <div class="estimate-subtitle">
-      Estimated completion time: 5 hours later
+      Estimated completion time: XX hours later
     </div>
   </div>
 
@@ -54,20 +54,20 @@
 
     <!-- make a list -->
     <ul>
-      <li *ngFor="let item of items; let i=index">
+      <li *ngFor="let item of items">
 
         <!-- left side the dot -->
         <div class="fa"></div>
 
         <!-- right side the content with left border -->
         <div class="fi">
-          {{i+1}} Here is the date...
+          {{item.UploadTimeString}}
           <br>
-          .. and its details ..
-          <br>
+          {{item.Status}}
+          <!-- <br>
           .. more details ..
           <br>
-          .. more details ..
+          .. more details .. -->
         </div>
 
       </li>

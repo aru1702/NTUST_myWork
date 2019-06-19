@@ -28,55 +28,55 @@ export class ToMtProgressPage implements OnInit {
     this.router.navigate(['mt-progress'], navExtra);
   }
 
-  EE_01_01(){
+  E2_07_01(){
     const { Device_ID } = this;
     let navExtra: NavigationExtras = {
       state: {
-        Device_ID: "EE_01_01"
+        Device_ID: "E2_07_01"
       }
     };
 
     this.router.navigate(['mt-progress'], navExtra);
   }
 
-  D2_04_01(){
+  MA_03_01(){
     const { Device_ID } = this;
     let navExtra: NavigationExtras = {
       state: {
-        Device_ID: "D2_04_01"
+        Device_ID: "MA_03_01"
       }
     };
 
     this.router.navigate(['mt-progress'], navExtra);
   }
 
-  LB_04_01() {
+  RB_09_01() {
     const { Device_ID } = this;
     let navExtra: NavigationExtras = {
       state: {
-        Device_ID: "LB_04_01"
+        Device_ID: "RB_09_01"
       }
     };
 
     this.router.navigate(['mt-progress'], navExtra);
   }
 
-  MA_05_01(){
+  T4_04_01(){
     const { Device_ID } = this;
     let navExtra: NavigationExtras = {
       state: {
-        Device_ID: "MA_05_01"
+        Device_ID: "T4_04_01"
       }
     };
 
     this.router.navigate(['mt-progress'], navExtra);
   }
 
-  T4_06_01(){
+  T4_07_01(){
     const { Device_ID } = this;
     let navExtra: NavigationExtras = {
       state: {
-        Device_ID: "T4_06_01"
+        Device_ID: "T4_07_01"
       }
     };
 
