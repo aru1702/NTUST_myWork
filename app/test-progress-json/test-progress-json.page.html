@@ -6,6 +6,23 @@
 
 <ion-content>
   <br><br>
+  <ion-title>Time array when using Upload Time</ion-title>
+  1. Before sorting from the newest
+  <br>
+  <ul>
+    <li *ngFor="let item of dummy; let i=index">
+      {{i+1}}. {{item.date}}
+    </li>
+  </ul>
+
+  2. After sorting from the newest
+  <ul>
+    <li *ngFor="let item of dummy2; let i=index">
+      {{i+1}}. {{item.date}}
+    </li>
+  </ul>
+
+  <br><br>
   <ion-title>Only showing dispenser which has repair condition:</ion-title>
   <br>
 
