@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>DISPENSER REPAIR CONDITION LIST</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br><br>
+  <ion-title>Only showing dispenser which has repair condition:</ion-title>
+  <br>
+
+  <ion-card *ngFor="let item of items">
+  
+    <!-- header of the card -->
+    <ion-card-header>
+      <ion-card-title>Device ID: {{item.Device_ID}}</ion-card-title>
+    </ion-card-header>
+    
+    <!-- content of the card -->
+    <ion-card-content>
+      <ion-list *ngFor="let repair of item.RepairCondition">
+        Upload Time: {{repair.UploadTime}}
+        <br>
+        Status: {{repair.Status}}
+        <br>
+        Error Type: {{repair.ErrorType}}
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>
