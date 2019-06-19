@@ -50,7 +50,44 @@ export class MtProgressPage implements OnInit {
 
   async main () {
     // get items from API
-    this.items = await this.getRepairCondition(this.device_id);
+
+    // dummy data
+    this.items = [
+      {
+        'UploadTime': new Date(2019, 3, 19, 11, 15, 0, 0),
+        'UploadTimeString': "2019-04-19 11:15:00",
+        'StatusNum': 4,
+        'Status': this.arrayStatus[3],
+        'ErrorTypeNum': 1,
+        'ErrorType': this.arrayErrorType[0]
+      },
+      {
+        'UploadTime': new Date(2019, 1, 13, 9, 15, 0, 0),
+        'UploadTimeString': "2019-02-13 09:15:00",
+        'StatusNum': 3,
+        'Status': this.arrayStatus[2],
+        'ErrorTypeNum': 1,
+        'ErrorType': this.arrayErrorType[0]
+      },
+      {
+        'UploadTime': new Date(2019, 0, 31, 15, 58, 0, 0),
+        'UploadTimeString': "2019-01-31 15:58:00",
+        'StatusNum': 2,
+        'Status': this.arrayStatus[1],
+        'ErrorTypeNum': 1,
+        'ErrorType': this.arrayErrorType[0]
+      },
+      {
+        'UploadTime': new Date(2019, 0, 15, 8, 37, 0, 0),
+        'UploadTimeString': "2019-01-15 08:37:00",
+        'StatusNum': 1,
+        'Status': this.arrayStatus[0],
+        'ErrorTypeNum': 1,
+        'ErrorType': this.arrayErrorType[0]
+      }
+    ]
+
+    // this.items = await this.getRepairCondition(this.device_id);
 
     // sort items array from the latest
     await this.sortFunction(this.items);
