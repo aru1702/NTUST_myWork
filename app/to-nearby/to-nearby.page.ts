@@ -36,7 +36,7 @@ export class ToNearbyPage implements OnInit {
       }
     };
 
-    this.router.navigate(['mt-progress'], navExtra);
+    this.router.navigate(['nearby'], navExtra);
   }
 
   D2_04_01(){
@@ -47,7 +47,7 @@ export class ToNearbyPage implements OnInit {
       }
     };
 
-    this.router.navigate(['mt-progress'], navExtra);
+    this.router.navigate(['nearby'], navExtra);
   }
 
   LB_04_01() {
@@ -58,7 +58,7 @@ export class ToNearbyPage implements OnInit {
       }
     };
 
-    this.router.navigate(['mt-progress'], navExtra);
+    this.router.navigate(['nearby'], navExtra);
   }
 
   MA_05_01(){
@@ -69,7 +69,7 @@ export class ToNearbyPage implements OnInit {
       }
     };
 
-    this.router.navigate(['mt-progress'], navExtra);
+    this.router.navigate(['nearby'], navExtra);
   }
 
   T4_06_01(){
@@ -80,7 +80,7 @@ export class ToNearbyPage implements OnInit {
       }
     };
 
-    this.router.navigate(['mt-progress'], navExtra);
+    this.router.navigate(['nearby'], navExtra);
   }
   
 }
