@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-mt-progress',
@@ -8,10 +11,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MtProgressPage implements OnInit {
 
-  /**
-   * API url list
-   */
+  // API url
   urlGetRepair: string = "https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Repair?Device_ID=";
+  urlPicture: string = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
 
   /**
    * Array for details from Get Repair Condition
@@ -24,7 +26,6 @@ export class MtProgressPage implements OnInit {
     "The repairment has been completed，and waits for validation",
     "Complete"
   ];
-
   arrayErrorType: string[] = [
     "Button does not respond",
     "Unable to emit water",
@@ -32,68 +33,53 @@ export class MtProgressPage implements OnInit {
     "Screen not shown"
   ];
 
-  /**
-   * field variable
-   */
   items: any = [];
-  
-  // dummy device_id
-  device_id: string = "RB_09_01";
+  device_id: string = "";
+  KEY_DEVICE_ID: string = "device_id";
+  isDeviceIdExists: boolean = false;
+  backgroundImg: any;
 
   constructor(
-    public http: HttpClient
-  ) { }
+    public http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router,
+    public toastCtrl: ToastController,
+
+    private storage: Storage
+  ) {
+    /**
+     * getting params from previous page under name "Device_ID"
+     * any page previous of this should pass params under the same name
+     */
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.device_id = this.router.getCurrentNavigation().extras.state.Device_ID;
+        this.isDeviceIdExists = true;
+      }
+    });
+  }
 
   ngOnInit() {
+    // this.storeDeviceId(this.device_id);
+    console.log(this.isDeviceIdExists);
     this.main();
   }
 
   async main () {
+    await this.prefDeviceId();
+
     // get items from API
+    this.items = await this.getRepairCondition(this.device_id);
 
-    // dummy data
-    this.items = [
-      {
-        'UploadTime': new Date(2019, 3, 19, 11, 15, 0, 0),
-        'UploadTimeString': "2019-04-19 11:15:00",
-        'StatusNum': 4,
-        'Status': this.arrayStatus[3],
-        'ErrorTypeNum': 1,
-        'ErrorType': this.arrayErrorType[0]
-      },
-      {
-        'UploadTime': new Date(2019, 1, 13, 9, 15, 0, 0),
-        'UploadTimeString': "2019-02-13 09:15:00",
-        'StatusNum': 3,
-        'Status': this.arrayStatus[2],
-        'ErrorTypeNum': 1,
-        'ErrorType': this.arrayErrorType[0]
-      },
-      {
-        'UploadTime': new Date(2019, 0, 31, 15, 58, 0, 0),
-        'UploadTimeString': "2019-01-31 15:58:00",
-        'StatusNum': 2,
-        'Status': this.arrayStatus[1],
-        'ErrorTypeNum': 1,
-        'ErrorType': this.arrayErrorType[0]
-      },
-      {
-        'UploadTime': new Date(2019, 0, 15, 8, 37, 0, 0),
-        'UploadTimeString': "2019-01-15 08:37:00",
-        'StatusNum': 1,
-        'Status': this.arrayStatus[0],
-        'ErrorTypeNum': 1,
-        'ErrorType': this.arrayErrorType[0]
-      }
-    ]
-
-    // this.items = await this.getRepairCondition(this.device_id);
+    // set image
+    this.backgroundImg = await this.getPicture(this.device_id);
+    console.log(this.backgroundImg);
 
     // sort items array from the latest
     await this.sortFunction(this.items);
 
     // test to console
-    console.log(this.items);
+    // console.log(this.items);
   }
 
   async sortFunction (myArray) {
@@ -184,5 +170,44 @@ export class MtProgressPage implements OnInit {
 
     return newDate;
   }
+
+  /**
+   * this method is for getting the picture of the dispenser
+   * 
+   * @param   device_id id of the dispenser
+   */
+  async getPicture (device_id) {
+    let myUrl = this.urlPicture + device_id;
+    return myUrl;
+  }
+
+  async prefDeviceId () {
+    
+    // if the device ID is passed
+    // set preferences
+    if (this.isDeviceIdExists) {
+      await this.storage.set(this.KEY_DEVICE_ID, this.device_id).then((success) => {
+        console.log("Set device id: " + success + " is success!");
+      }).catch((failed) => {
+        console.error("Error while storing: " + failed);
+      });
+    }
+    
+    // or if not, when page reloaded without going to previous page
+    // get from preferences
+    else {
+      await this.storage.get(this.KEY_DEVICE_ID).then((result) => {
+        this.device_id = result;
+        console.log("Load device id: " + result + " is success!");
+      });
+    }
+  }
+
+  // async storeDeviceId (device_id: string) {
+  //   this.storage.set(this.KEY_DEVICE_ID, device_id).then((result) => {
+  //     console.log(result);
+  //     console.log("Key under " + this.KEY_DEVICE_ID + " with value " + device_id + " is successfully stored");
+  //   });
+  // }
 
 }

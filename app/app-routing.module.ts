@@ -16,7 +16,10 @@ const routes: Routes = [
   { path: 'to-nearby', loadChildren: './to-nearby/to-nearby.module#ToNearbyPageModule' },
   { path: 'mt-progress', loadChildren: './mt-progress/mt-progress.module#MtProgressPageModule' },
   { path: 'to-mt-progress', loadChildren: './to-mt-progress/to-mt-progress.module#ToMtProgressPageModule' },
-  { path: 'test-progress-json', loadChildren: './test-progress-json/test-progress-json.module#TestProgressJsonPageModule' }
+  { path: 'test-progress-json', loadChildren: './test-progress-json/test-progress-json.module#TestProgressJsonPageModule' },  { path: 'test-nested', loadChildren: './test-nested/test-nested.module#TestNestedPageModule' },
+  { path: 'test-storage', loadChildren: './test-storage/test-storage.module#TestStoragePageModule' },
+  { path: 'test-report', loadChildren: './test-report/test-report.module#TestReportPageModule' }
+
 ];
 
 @NgModule({

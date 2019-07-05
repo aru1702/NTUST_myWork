@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-nearby',
@@ -30,13 +31,18 @@ export class NearbyPage implements OnInit {
   // selectedDeviceId: String = "MA_05_01";
 
   // get deviceId from entering page
-  selectedDeviceId: String = "";
+  selectedDeviceId: string = "";
+
+  // preferences use
+  KEY_DEVICE_ID: string = "device_id";
+  isDeviceIdExists: boolean = false;
 
   constructor(
     public http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private storage: Storage
   ) {
 
     /**
@@ -46,6 +52,7 @@ export class NearbyPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.selectedDeviceId = this.router.getCurrentNavigation().extras.state.Device_ID;
+        this.isDeviceIdExists = true;
       }
     });
   }
@@ -123,6 +130,9 @@ export class NearbyPage implements OnInit {
    * - Picture      => getPicture(device_id)
    */
   async main () {
+
+    // check id from preference
+    await this.prefDeviceId();
 
     // check if device id is available
     try {
@@ -320,5 +330,27 @@ export class NearbyPage implements OnInit {
 
     // set resultDone to true
     this.resultDone = true;
+  }
+
+  async prefDeviceId () {
+    
+    // if the device ID is passed
+    // set preferences
+    if (this.isDeviceIdExists) {
+      await this.storage.set(this.KEY_DEVICE_ID, this.selectedDeviceId).then((success) => {
+        console.log("Set device id: " + success + " is success!");
+      }).catch((failed) => {
+        console.error("Error while storing: " + failed);
+      });
+    }
+    
+    // or if not, when page reloaded without going to previous page
+    // get from preferences
+    else {
+      await this.storage.get(this.KEY_DEVICE_ID).then((result) => {
+        this.selectedDeviceId = result;
+        console.log("Load device id: " + result + " is success!");
+      });
+    }
   }
 }

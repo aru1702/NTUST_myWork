@@ -37,7 +37,7 @@ export class HomePage {
   }
 
   mtProgress() {
-    this.router.navigate(['mt-progress']);
+    this.router.navigate(['to-mt-progress']);
   }
 
   async gettoken() {

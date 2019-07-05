@@ -1,7 +1,7 @@
 <ion-content>
 
   <!-- header -->
-  <div class="header">
+  <div class="header" [style.backgroundImage]="'url(' + backgroundImg + ')'">
     <div class="overlay header-inside">
       
       <div class="header-inside--icon-left float-left">
@@ -18,7 +18,7 @@
           src="assets\acuo-avatar\group-6@3x.png" 
           alt="acuo-avatar1"
         >
-        <h5>Maintenance Progress</h5>
+        <h2>Maintenance Progress</h2>
       </div>
       
       <div class="header-inside--icon-right float-left">
@@ -35,11 +35,11 @@
   <!-- estimate -->
   <div class="estimate">
     <div>
-      <img 
-        class="estimate-icon" 
-        src="assets\cup-coffee\rectangle_3@3x.png" 
-        alt="alert"
-      >
+      <!-- <img
+        class="estimate-icon"
+        src="assets\_ionicons_svg_md-alert.svg"
+        alt="alert image"> -->
+      <ion-icon name="alert" color="warning" size="large"></ion-icon>
     </div>
     <div class="estimate-title">
       <b>Report submitted</b>
@@ -63,7 +63,9 @@
         <div class="fi">
           {{item.UploadTimeString}}
           <br>
-          {{item.Status}}
+          Issue occured: {{item.ErrorType}}
+          <br>
+          Current status: {{item.Status}}
           <br>
           <!-- .. more details ..
           <br>
