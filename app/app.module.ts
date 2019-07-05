@@ -26,7 +26,7 @@ import { IonicStorageModule } from '@ionic/storage';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 
     HttpClientModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     StatusBar,

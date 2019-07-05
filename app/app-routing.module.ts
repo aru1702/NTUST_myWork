@@ -18,7 +18,8 @@ const routes: Routes = [
   { path: 'to-mt-progress', loadChildren: './to-mt-progress/to-mt-progress.module#ToMtProgressPageModule' },
   { path: 'test-progress-json', loadChildren: './test-progress-json/test-progress-json.module#TestProgressJsonPageModule' },  { path: 'test-nested', loadChildren: './test-nested/test-nested.module#TestNestedPageModule' },
   { path: 'test-storage', loadChildren: './test-storage/test-storage.module#TestStoragePageModule' },
-  { path: 'test-report', loadChildren: './test-report/test-report.module#TestReportPageModule' }
+  { path: 'test-report', loadChildren: './test-report/test-report.module#TestReportPageModule' },
+  { path: 'test-pause', loadChildren: './test-pause/test-pause.module#TestPausePageModule' }
 
 ];
 
