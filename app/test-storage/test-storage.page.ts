@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
+import { PreferenceManagerService } from '../services/preference-manager.service';
+import { StaticVariable } from '../class/static-variable';
 
 @Component({
   selector: 'app-test-storage',
@@ -8,18 +9,8 @@ import { Storage } from '@ionic/storage';
 })
 export class TestStoragePage implements OnInit {
 
-  // dictionary key
-  DICTIONARY_KEY: string = "myPref";
-
-  // test key for value
-  KEY_1: string = "key1";
-
-  // test value
-  VALUE_1 = "aaa";
-  VALUE_2 = 222;
-
   constructor(
-    private storage: Storage
+    private srvPref: PreferenceManagerService
   ) { }
 
   ngOnInit() {
@@ -28,18 +19,68 @@ export class TestStoragePage implements OnInit {
 
   async main () {
     
-    // set a key/value
-    let a;
-    await this.storage.set('name', 'Max').then((result) => {
-      a = result;
-    });
-    console.log(a);
+    let key = "myKey";
+    let data = "Hello World"
+    let data2 = "HelloWorld";
 
-    // this.storage.get('name').then((val) => {
-    //   console.log("My name: " + val);
+    console.log("Save into preference");
+    console.log("Key name: " + StaticVariable.KEY__SESSION_ID);
+    key = StaticVariable.KEY__SESSION_ID;
+    await this.srvPref.saveData(key, data).then((onSuccess) => {
+      console.log("Success! " + onSuccess);
+    }, (onFailed) => {
+      console.error("Failed! " + onFailed);
+    });
+
+    console.log("Get data from preference service");
+    await this.srvPref.getData(key).then((onSuccess) => {
+      console.log(onSuccess);
+    }, (onFailed) => {
+      console.error(onFailed);
+    });
+
+    // console.log("Save into preference service");
+    // await this.srvPref.saveData(key, data).then((onSuccess) => {
+    //   console.log("Success! " + onSuccess);
+    // }, (onFailed) => {
+    //   console.error("Failed! " + onFailed);
     // });
 
-    
+    // console.log("Get data from preference service");
+    // await this.srvPref.getData(key).then((onSuccess) => {
+    //   console.log(onSuccess);
+    // }, (onFailed) => {
+    //   console.error(onFailed);
+    // });
+
+    // console.log("Check if data is same with " + data);
+    // await this.srvPref.checkData(key, data).then((onSuccess) => {
+    //   console.log(onSuccess);
+    // }, (onFailed) => {
+    //   console.error(onFailed);
+    // });
+
+    // console.log("Check if data is same with " + data2);
+    // await this.srvPref.checkData(key, data2).then((onSuccess) => {
+    //   console.log(onSuccess);
+    // }, (onFailed) => {
+    //   console.error(onFailed);
+    // });
+
+    // console.log("Remove value from preference service");
+    // await this.srvPref.removeData(key).then((onSuccess) => {
+    //   console.log(onSuccess);
+    // }, (onFailed) => {
+    //   console.error(onFailed);
+    // });
+
+    // console.log("Get data after remove");
+    // await this.srvPref.getData(key).then((onSuccess) => {
+    //   console.log(onSuccess);
+    // }, (onFailed) => {
+    //   console.error(onFailed);
+    // });
+
   }
 
 }
