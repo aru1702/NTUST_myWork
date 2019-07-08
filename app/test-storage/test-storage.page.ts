@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PreferenceManagerService } from '../services/preference-manager.service';
-import { StaticVariable } from '../class/static-variable';
+import { StaticVariable } from '../classes/static-variable';
 
 @Component({
   selector: 'app-test-storage',

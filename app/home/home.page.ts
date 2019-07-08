@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { HttpClient } from '@angular/common/http';
 import { PreferenceManagerService } from '../services/preference-manager.service';
-import { StaticVariable } from '../class/static-variable';
+import { StaticVariable } from '../classes/static-variable';
 
 @Component({
   selector: 'app-home',
@@ -36,15 +36,24 @@ export class HomePage {
     console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
 
     if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
-      this.router.navigate(['login']);
-    }
 
-    if (difDate > StaticVariable.SESSION_TIMEOUT) {
+      // direct the user to login page
       this.router.navigate(['login']);
       
+    } else if (difDate > StaticVariable.SESSION_TIMEOUT) {
+
+      // direct the user to login page
+      this.router.navigate(['login']);
+      
+      // remove the session ID from preference
       this.pref.removeData(StaticVariable.KEY__SESSION_ID);
 
+      // save the name of page
       this.pref.saveData(StaticVariable.KEY__LAST_PAGE, 'home');
+    } else {
+
+      // save new Date
+      this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);
     }
   }
 

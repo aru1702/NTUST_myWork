@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http'
 import { PreferenceManagerService } from 'src/app/services/preference-manager.service';
-import { StaticVariable } from 'src/app/class/static-variable';
+import { StaticVariable } from 'src/app/classes/static-variable';
 
 @Component({
   selector: 'app-login',
