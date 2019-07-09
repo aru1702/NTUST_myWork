@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'
+import { NavController } from '@ionic/angular'
+
 import { PreferenceManagerService } from 'src/app/services/preference-manager.service';
 import { StaticVariable } from 'src/app/classes/static-variable';
 import { DispenserAPIService } from 'src/app/services/dispenser-api.service';
@@ -16,8 +17,9 @@ export class LoginPage {
   password: string = "";
 
   constructor(
-    private http: HttpClient,
     private router: Router,
+    private navCtrl: NavController,
+
     private pref: PreferenceManagerService,
     private api: DispenserAPIService
     ) { }
@@ -53,8 +55,9 @@ export class LoginPage {
         // delete last_page from preference
         await this.pref.removeData(StaticVariable.KEY__LAST_PAGE);
 
-          // console.log(lastPage);
-        this.router.navigate([lastPage]);
+        //   console.log("Go to: " + lastPage);
+        // this.router.navigate([lastPage]);
+        this.navCtrl.back();
       }
 
       console.log("Login successed!");

@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
+import { PreferenceManagerService } from '../services/preference-manager.service';
+import { StaticVariable } from '../classes/static-variable';
+
 @Component({
   selector: 'app-nearby',
   templateUrl: './nearby.page.html',
@@ -42,19 +45,22 @@ export class NearbyPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public toastCtrl: ToastController,
-    private storage: Storage
+
+    private storage: Storage,
+    private pref: PreferenceManagerService
   ) {
 
     /**
      * getting params from previous page under name "Device_ID"
      * any page previous of this should pass params under the same name
      */
-    this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.selectedDeviceId = this.router.getCurrentNavigation().extras.state.Device_ID;
-        this.isDeviceIdExists = true;
-      }
-    });
+
+    // this.route.queryParams.subscribe(params => {
+    //   if (this.router.getCurrentNavigation().extras.state) {
+    //     this.selectedDeviceId = this.router.getCurrentNavigation().extras.state.Device_ID;
+    //     this.isDeviceIdExists = true;
+    //   }
+    // });
   }
 
   /**
@@ -67,6 +73,11 @@ export class NearbyPage implements OnInit {
    */
   ngOnInit() {
     this.main();
+  }
+
+  ionViewDidEnter() {
+    console.log("ionViewDidEnter()");
+    this.checkSession();
   }
 
   /**
@@ -131,8 +142,13 @@ export class NearbyPage implements OnInit {
    */
   async main () {
 
-    // check id from preference
-    await this.prefDeviceId();
+    // // check id from preference
+    // await this.prefDeviceId();
+
+    await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID).then((value) => {
+      this.selectedDeviceId = value;
+      // this.isDeviceIdExists = true;
+    });
 
     // check if device id is available
     try {
@@ -337,6 +353,9 @@ export class NearbyPage implements OnInit {
     // if the device ID is passed
     // set preferences
     if (this.isDeviceIdExists) {
+      this.selectedDeviceId = await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID);
+
+      
       await this.storage.set(this.KEY_DEVICE_ID, this.selectedDeviceId).then((success) => {
         console.log("Set device id: " + success + " is success!");
       }).catch((failed) => {
@@ -351,6 +370,41 @@ export class NearbyPage implements OnInit {
         this.selectedDeviceId = result;
         console.log("Load device id: " + result + " is success!");
       });
+    }
+  }
+
+  async checkSession() {
+    
+    // check session ID and date
+    let nowDate = new Date();
+    let lastDate = await this.pref.getData(StaticVariable.KEY__LAST_DATE)
+    let difDate = nowDate.getTime() - lastDate.getTime();
+
+    // check in console
+      console.log(nowDate);
+      console.log(lastDate);
+      console.log(difDate);
+      console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
+
+    if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
+
+      // direct the user to login page
+      this.router.navigate(['login']);
+      
+    } else if (difDate > StaticVariable.SESSION_TIMEOUT) {
+
+      // direct the user to login page
+      this.router.navigate(['login']);
+      
+      // remove the session ID from preference
+      this.pref.removeData(StaticVariable.KEY__SESSION_ID);
+
+      // save the name of page
+      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, "nearby");
+    } else {
+
+      // save new Date
+      this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);
     }
   }
 }

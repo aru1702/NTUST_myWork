@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
+import { PreferenceManagerService } from '../services/preference-manager.service';
+import { StaticVariable } from '../classes/static-variable';
+
 @Component({
   selector: 'app-mt-progress',
   templateUrl: './mt-progress.page.html',
@@ -45,7 +48,8 @@ export class MtProgressPage implements OnInit {
     private router: Router,
     public toastCtrl: ToastController,
 
-    private storage: Storage
+    private storage: Storage,
+    private pref: PreferenceManagerService
   ) {
     /**
      * getting params from previous page under name "Device_ID"
@@ -60,6 +64,7 @@ export class MtProgressPage implements OnInit {
   }
 
   ngOnInit() {
+    this.checkSession();
     // this.storeDeviceId(this.device_id);
     console.log(this.isDeviceIdExists);
     this.main();
@@ -209,5 +214,40 @@ export class MtProgressPage implements OnInit {
   //     console.log("Key under " + this.KEY_DEVICE_ID + " with value " + device_id + " is successfully stored");
   //   });
   // }
+
+  async checkSession() {
+    
+    // check session ID and date
+    let nowDate = new Date();
+    let lastDate = await this.pref.getData(StaticVariable.KEY__LAST_DATE)
+    let difDate = nowDate.getTime() - lastDate.getTime();
+
+    // check in console
+      // console.log(nowDate);
+      // console.log(lastDate);
+      // console.log(difDate);
+      // console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
+
+    if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
+
+      // direct the user to login page
+      this.router.navigate(['login']);
+      
+    } else if (difDate > StaticVariable.SESSION_TIMEOUT) {
+
+      // direct the user to login page
+      this.router.navigate(['login']);
+      
+      // remove the session ID from preference
+      this.pref.removeData(StaticVariable.KEY__SESSION_ID);
+
+      // save the name of page
+      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, "mt-progress");
+    } else {
+
+      // save new Date
+      this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);
+    }
+  }
 
 }
