@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { ToastController, NavController } from '@ionic/angular';
 
 import { PreferenceManagerService } from '../services/preference-manager.service';
 import { StaticVariable } from '../classes/static-variable';
+import { DispenserAPIService } from '../services/dispenser-api.service';
 
 @Component({
   selector: 'app-nearby',
@@ -14,10 +13,10 @@ import { StaticVariable } from '../classes/static-variable';
 })
 export class NearbyPage implements OnInit {
 
-  // API
-  urlNearby = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Nearby?Device_ID=';
-  urlDetails = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Detail?Device_ID=';
-  urlPicture = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
+  // // API
+  // urlNearby = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Nearby?Device_ID=';
+  // urlDetails = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Detail?Device_ID=';
+  // urlPicture = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
 
   // field
   public nearbySameBuilding = [];
@@ -30,38 +29,21 @@ export class NearbyPage implements OnInit {
   private onlyHot : boolean = false;
   private resultDone: boolean = false;
 
+  backgroundImg: any;
+
   // dummy data for test
   // selectedDeviceId: String = "MA_05_01";
 
   // get deviceId from entering page
   selectedDeviceId: string = "";
 
-  // preferences use
-  KEY_DEVICE_ID: string = "device_id";
-  isDeviceIdExists: boolean = false;
-
   constructor(
     public http: HttpClient,
-    private route: ActivatedRoute,
-    private router: Router,
     public toastCtrl: ToastController,
-
-    private storage: Storage,
-    private pref: PreferenceManagerService
-  ) {
-
-    /**
-     * getting params from previous page under name "Device_ID"
-     * any page previous of this should pass params under the same name
-     */
-
-    // this.route.queryParams.subscribe(params => {
-    //   if (this.router.getCurrentNavigation().extras.state) {
-    //     this.selectedDeviceId = this.router.getCurrentNavigation().extras.state.Device_ID;
-    //     this.isDeviceIdExists = true;
-    //   }
-    // });
-  }
+    private pref: PreferenceManagerService,
+    private api: DispenserAPIService,
+    private navCtrl: NavController
+  ) {  }
 
   /**
    * ngOnInit() is the function that called when page being loaded.
@@ -75,8 +57,11 @@ export class NearbyPage implements OnInit {
     this.main();
   }
 
+  /**
+   * 
+   */
   ionViewDidEnter() {
-    console.log("ionViewDidEnter()");
+    // console.log("ionViewDidEnter()");
     this.checkSession();
   }
 
@@ -142,18 +127,14 @@ export class NearbyPage implements OnInit {
    */
   async main () {
 
-    // // check id from preference
-    // await this.prefDeviceId();
-
-    await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID).then((value) => {
-      this.selectedDeviceId = value;
-      // this.isDeviceIdExists = true;
-    });
-
+    // check id from preference
+    await this.prefDeviceId();
+    
     // check if device id is available
     try {
-      let deviceAvailability_Url = this.urlDetails + this.selectedDeviceId;
-      await this.http.get(deviceAvailability_Url).toPromise();
+      this.selectedDeviceId = await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID);
+      await this.api.getNearbyDispenser(this.selectedDeviceId);
+      
     } catch (error) {
 
       // send Toast messsage (announce) on top of page if device id is incorrect
@@ -170,6 +151,9 @@ export class NearbyPage implements OnInit {
 
     // get the details of selected dispenser
     let currentDispenserDetails = await this.getDetails(this.selectedDeviceId);
+
+    // set img background
+    this.backgroundImg = await this.getPicture(this.selectedDeviceId);
 
     // get the location of selected dispensed
     let currentBuildingLocation = await this.getBuildingLocation(currentDispenserDetails);  
@@ -223,10 +207,11 @@ export class NearbyPage implements OnInit {
    * @returns myJson    json of the nearby dispenser
    */
   async getNearby (device_id) {
-    let myUrl = this.urlNearby + device_id;
-    let myJson = await this.http.get(myUrl).toPromise();
-
-    return myJson['Data'];
+    // let myUrl = this.urlNearby + device_id;
+    // let myJson = await this.http.get(myUrl).toPromise();
+    
+    let myJson = await this.api.getNearbyDispenser(device_id);
+    return myJson;
   }
 
   /**
@@ -236,35 +221,20 @@ export class NearbyPage implements OnInit {
    * @returns myJson    json of dispenser's details
    */
   async getDetails (device_id) {
-    let myUrl = this.urlDetails + device_id;
-    let myJson = await this.http.get(myUrl).toPromise();
-    
-    return myJson['Data'];
+    // let myUrl = this.urlDetails + device_id;
+    // let myJson = await this.http.get(myUrl).toPromise();
+
+    let myJson = await this.api.getDispenserDetail(device_id);
+    return myJson;
   }
 
   /**
    * this method is for getting the picture of the dispenser
    * 
    * @param   device_id id of the dispenser
-   * 
-   * @todo:
-   * - for now, returned value is the URL of API
-   * - returned value should be the image
-   * - image returned is too big (around 3000 x 4000 px)
-   * - returned image can be optional?
    */
   async getPicture (device_id) {
-    let myUrl = this.urlPicture + device_id;
-
-    /**
-     * @return  myImage  very big image
-     */
-    // let myImage = await this.http.get(myUrl).toPromise();
-    // return myImage;
-
-    /**
-     * @return  myUrl  just url of the image
-     */
+    let myUrl = await this.api.getDispenserPictureUrlOnly(device_id);
     return myUrl;
   }
 
@@ -349,28 +319,9 @@ export class NearbyPage implements OnInit {
   }
 
   async prefDeviceId () {
-    
-    // if the device ID is passed
-    // set preferences
-    if (this.isDeviceIdExists) {
-      this.selectedDeviceId = await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID);
-
-      
-      await this.storage.set(this.KEY_DEVICE_ID, this.selectedDeviceId).then((success) => {
-        console.log("Set device id: " + success + " is success!");
-      }).catch((failed) => {
-        console.error("Error while storing: " + failed);
-      });
-    }
-    
-    // or if not, when page reloaded without going to previous page
-    // get from preferences
-    else {
-      await this.storage.get(this.KEY_DEVICE_ID).then((result) => {
-        this.selectedDeviceId = result;
-        console.log("Load device id: " + result + " is success!");
-      });
-    }
+    await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID).then((value) => {
+      this.selectedDeviceId = value;
+    });
   }
 
   async checkSession() {
@@ -380,28 +331,33 @@ export class NearbyPage implements OnInit {
     let lastDate = await this.pref.getData(StaticVariable.KEY__LAST_DATE)
     let difDate = nowDate.getTime() - lastDate.getTime();
 
+    // check if there any session ID
+    let checkData = await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null);
+
+    let currentPage = "nearby";
+
     // check in console
       console.log(nowDate);
       console.log(lastDate);
       console.log(difDate);
       console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
 
-    if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
+    if (checkData) {
 
       // direct the user to login page
-      this.router.navigate(['login']);
+      this.navCtrl.navigateForward(['login']);
       
     } else if (difDate > StaticVariable.SESSION_TIMEOUT) {
 
       // direct the user to login page
-      this.router.navigate(['login']);
+      this.navCtrl.navigateForward(['login']);
       
       // remove the session ID from preference
       this.pref.removeData(StaticVariable.KEY__SESSION_ID);
 
       // save the name of page
-      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, "nearby");
-    } else {
+      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, currentPage);
+    } else if (!checkData && difDate <= StaticVariable.SESSION_TIMEOUT) {
 
       // save new Date
       this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);

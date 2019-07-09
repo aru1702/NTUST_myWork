@@ -1,6 +1,6 @@
 <ion-content>
     
-  <div class="header">
+  <div class="header" [style.backgroundImage]="'url(' + backgroundImg + ')'">
     <div class="overlay header-inside">
       
       <div class="header-inside--icon-left float-left">
@@ -86,7 +86,7 @@
       <div *ngIf="resultDone == true">
         <ion-card *ngFor="let item of nearbySameBuilding" >
 
-          <div class="body-content--card">
+          <div class="body-content--card" [style.backgroundImage]="'url(' + item.Picture + ')'">
             <div class="overlay body-content--card-inside">
               <div class="body-content--card-item">
   

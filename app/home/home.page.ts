@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { HttpClient } from '@angular/common/http';
+import { NavController } from '@ionic/angular';
 import { PreferenceManagerService } from '../services/preference-manager.service';
 import { StaticVariable } from '../classes/static-variable';
 
@@ -12,42 +10,59 @@ import { StaticVariable } from '../classes/static-variable';
 })
 export class HomePage {
 
-  token : any = "";
-
   constructor (
-    private router: Router,
-    private http: HttpClient,
+    private navCtrl: NavController,
     private pref: PreferenceManagerService
   ) {
     this.main();
   }
 
-  main () {
+  async main () {
+    await this.checkPrefFirstTime();
+  }
+
+  ionViewDidEnter () {
     this.checkSession();
   }
 
-  async checkSession() {
+  async checkPrefFirstTime () {
     
+    // in here check the first time when app opened
+    let a = await this.pref.getData(StaticVariable.KEY__CHECK_PREF_CREATED);
+    if (a === null || a === undefined) {
+
+      // create some first
+      await this.pref.saveData(StaticVariable.KEY__CHECK_PREF_CREATED, true);
+      await this.pref.saveData(StaticVariable.KEY__LAST_DATE, new Date());
+      await this.pref.saveData(StaticVariable.KEY__LAST_PAGE, null);
+      await this.pref.saveData(StaticVariable.KEY__MAINTENANCE_PROGRESS__DEVICE_ID, null);
+      await this.pref.saveData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID, null);
+      await this.pref.saveData(StaticVariable.KEY__SESSION_ID, null); 
+    }
+  }
+
+  async checkSession() {
+
     // check session ID and date
     let nowDate = new Date();
     let lastDate = await this.pref.getData(StaticVariable.KEY__LAST_DATE)
     let difDate = nowDate.getTime() - lastDate.getTime();
 
-    // check in console
-      // console.log(nowDate);
-      // console.log(lastDate);
-      // console.log(difDate);
-      // console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
+    // // check in console
+    //   console.log("Now date: " + nowDate);
+    //   console.log("Last date: " + lastDate);
+    //   console.log("Difference: " + difDate);
+    //   console.log("Session ID: " + await this.pref.getData(StaticVariable.KEY__SESSION_ID));
 
     if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
-
+    
       // direct the user to login page
-      this.router.navigate(['login']);
+      this.navCtrl.navigateForward(['login']);
       
     } else if (difDate > StaticVariable.SESSION_TIMEOUT) {
-
+    
       // direct the user to login page
-      this.router.navigate(['login']);
+      this.navCtrl.navigateForward(['login']);
       
       // remove the session ID from preference
       this.pref.removeData(StaticVariable.KEY__SESSION_ID);
@@ -55,48 +70,27 @@ export class HomePage {
       // save the name of page
       this.pref.saveData(StaticVariable.KEY__LAST_PAGE, "home");
     } else {
-
+     
       // save new Date
       this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);
     }
+    
   }
 
   login() {
-    this.router.navigate(['login']); 
+    this.navCtrl.navigateForward(['login']); 
   }
 
   register() {
-    this.router.navigate(['register']); 
-  }
-
-  reset() {
-    this.router.navigate(['reset']); 
-  }
-
-  record() {
-    this.router.navigate(['records']); 
+    this.navCtrl.navigateForward(['register']); 
   }
 
   nearby() {
-    this.router.navigate(['to-nearby']);
+    this.navCtrl.navigateForward(['to-nearby']);
   }
 
   mtProgress() {
-    this.router.navigate(['to-mt-progress']);
+    this.navCtrl.navigateForward(['to-mt-progress']);
   }
 
-  // async gettoken() {
-  //   let postData = {
-  //     "UserName": "pwa_user001",
-  //     "Password": "password"
-  //   }
-
-  //   this.http.post("https://smartcampus.et.ntust.edu.tw:5425/Login", postData)
-  //     .subscribe(data => {
-  //       console.log(data['token']);
-  //       this.token = data['token'];
-  //      }, error => {
-  //       console.log(error);
-  //     });
-  // }
 }

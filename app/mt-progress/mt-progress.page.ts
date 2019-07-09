@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
-
+import { ToastController, NavController } from '@ionic/angular';
 import { PreferenceManagerService } from '../services/preference-manager.service';
 import { StaticVariable } from '../classes/static-variable';
+import { DispenserAPIService } from '../services/dispenser-api.service';
 
 @Component({
   selector: 'app-mt-progress',
@@ -15,8 +13,8 @@ import { StaticVariable } from '../classes/static-variable';
 export class MtProgressPage implements OnInit {
 
   // API url
-  urlGetRepair: string = "https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Repair?Device_ID=";
-  urlPicture: string = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
+  // urlGetRepair: string = "https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Repair?Device_ID=";
+  // urlPicture: string = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
 
   /**
    * Array for details from Get Repair Condition
@@ -38,47 +36,60 @@ export class MtProgressPage implements OnInit {
 
   items: any = [];
   device_id: string = "";
-  KEY_DEVICE_ID: string = "device_id";
-  isDeviceIdExists: boolean = false;
+  // KEY_DEVICE_ID: string = "device_id";
+  // isDeviceIdExists: boolean = false;
   backgroundImg: any;
 
   constructor(
     public http: HttpClient,
-    private route: ActivatedRoute,
-    private router: Router,
     public toastCtrl: ToastController,
-
-    private storage: Storage,
-    private pref: PreferenceManagerService
-  ) {
-    /**
-     * getting params from previous page under name "Device_ID"
-     * any page previous of this should pass params under the same name
-     */
-    this.route.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation().extras.state) {
-        this.device_id = this.router.getCurrentNavigation().extras.state.Device_ID;
-        this.isDeviceIdExists = true;
-      }
-    });
-  }
+    private pref: PreferenceManagerService,
+    private navCtrl: NavController,
+    private api: DispenserAPIService
+  ) {  }
 
   ngOnInit() {
-    this.checkSession();
-    // this.storeDeviceId(this.device_id);
-    console.log(this.isDeviceIdExists);
     this.main();
   }
 
+  /**
+   * 
+   */
+  ionViewDidEnter() {
+    // console.log("ionViewDidEnter()");
+    this.checkSession();
+  }
+
   async main () {
-    await this.prefDeviceId();
+    
+   // check id from preference
+   await this.prefDeviceId();
+    
+   // check if device id is available
+   try {
+     this.device_id = await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID);
+     await this.api.getNearbyDispenser(this.device_id);
+     
+   } catch (error) {
+
+     // send Toast messsage (announce) on top of page if device id is incorrect
+     let myToast = await this.toastCtrl.create({
+       message: 'Dispenser is not found or ID is incorrect!',
+       duration: 2000,
+       position: 'top',
+       showCloseButton: true,
+       closeButtonText: 'Close'
+     });
+     myToast.present();
+     return;
+   }   
 
     // get items from API
     this.items = await this.getRepairCondition(this.device_id);
 
     // set image
     this.backgroundImg = await this.getPicture(this.device_id);
-    console.log(this.backgroundImg);
+    // console.log(this.backgroundImg);
 
     // sort items array from the latest
     await this.sortFunction(this.items);
@@ -101,10 +112,10 @@ export class MtProgressPage implements OnInit {
   }
 
   async getRepairCondition (device_id: string) {
-    const myUrl = this.urlGetRepair + device_id;
+    // const myUrl = this.urlGetRepair + device_id;
 
-    let myJson = await this.http.get(myUrl).toPromise();
-    let myData = myJson['Data'];
+    // let myJson = await this.http.get(myUrl).toPromise();
+    let myData = await this.api.getDispenserRepairCondition(device_id);
 
     let returnJson: any = [];
 
@@ -182,38 +193,15 @@ export class MtProgressPage implements OnInit {
    * @param   device_id id of the dispenser
    */
   async getPicture (device_id) {
-    let myUrl = this.urlPicture + device_id;
+    let myUrl = await this.api.getDispenserPictureUrlOnly(device_id);
     return myUrl;
   }
 
   async prefDeviceId () {
-    
-    // if the device ID is passed
-    // set preferences
-    if (this.isDeviceIdExists) {
-      await this.storage.set(this.KEY_DEVICE_ID, this.device_id).then((success) => {
-        console.log("Set device id: " + success + " is success!");
-      }).catch((failed) => {
-        console.error("Error while storing: " + failed);
-      });
-    }
-    
-    // or if not, when page reloaded without going to previous page
-    // get from preferences
-    else {
-      await this.storage.get(this.KEY_DEVICE_ID).then((result) => {
-        this.device_id = result;
-        console.log("Load device id: " + result + " is success!");
-      });
-    }
+    await this.pref.getData(StaticVariable.KEY__NEARBY_DISPENSER__DEVICE_ID).then((value) => {
+      this.device_id = value;
+    });
   }
-
-  // async storeDeviceId (device_id: string) {
-  //   this.storage.set(this.KEY_DEVICE_ID, device_id).then((result) => {
-  //     console.log(result);
-  //     console.log("Key under " + this.KEY_DEVICE_ID + " with value " + device_id + " is successfully stored");
-  //   });
-  // }
 
   async checkSession() {
     
@@ -222,28 +210,33 @@ export class MtProgressPage implements OnInit {
     let lastDate = await this.pref.getData(StaticVariable.KEY__LAST_DATE)
     let difDate = nowDate.getTime() - lastDate.getTime();
 
-    // check in console
-      // console.log(nowDate);
-      // console.log(lastDate);
-      // console.log(difDate);
-      // console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
+    // check if there any session ID
+    let checkData = await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null);
 
-    if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
+    let currentPage = "mt-progress";
+
+    // check in console
+      console.log(nowDate);
+      console.log(lastDate);
+      console.log(difDate);
+      console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
+
+    if (checkData) {
 
       // direct the user to login page
-      this.router.navigate(['login']);
+      this.navCtrl.navigateForward(['login']);
       
     } else if (difDate > StaticVariable.SESSION_TIMEOUT) {
 
       // direct the user to login page
-      this.router.navigate(['login']);
+      this.navCtrl.navigateForward(['login']);
       
       // remove the session ID from preference
       this.pref.removeData(StaticVariable.KEY__SESSION_ID);
 
       // save the name of page
-      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, "mt-progress");
-    } else {
+      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, currentPage);
+    } else if (!checkData && difDate <= StaticVariable.SESSION_TIMEOUT) {
 
       // save new Date
       this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);

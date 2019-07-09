@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular'
 
 import { PreferenceManagerService } from 'src/app/services/preference-manager.service';
@@ -17,9 +16,7 @@ export class LoginPage {
   password: string = "";
 
   constructor(
-    private router: Router,
     private navCtrl: NavController,
-
     private pref: PreferenceManagerService,
     private api: DispenserAPIService
     ) { }
@@ -44,19 +41,19 @@ export class LoginPage {
 
       // get last page if exists
       let lastPage = await this.pref.getData(StaticVariable.KEY__LAST_PAGE);
-        // console.log(lastPage);
+
       if (lastPage === null) {
 
-        // if null route to home
-        this.router.navigate(['home']);
+        // if null route to home as default
+        this.navCtrl.navigateForward(['home']);
 
       } else {
 
         // delete last_page from preference
         await this.pref.removeData(StaticVariable.KEY__LAST_PAGE);
 
-        //   console.log("Go to: " + lastPage);
-        // this.router.navigate([lastPage]);
+        // route to going back
+        // this is because when login page called is above the current page
         this.navCtrl.back();
       }
 
@@ -69,14 +66,7 @@ export class LoginPage {
   }
 
   registerlink() {
-    this.router.navigate(['register']); 
+    this.navCtrl.navigateForward(['register']); 
   }
-
-  // async saveSession(id) {
-  //   await this.pref.saveData(StaticVariable.KEY__SESSION_ID, id);
-  // }
-
-  // async saveLastDate(date) {
-  //   await this.pref.saveData(StaticVariable.KEY__LAST_DATE, date);
-  // }
+  
 }
