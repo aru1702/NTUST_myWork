@@ -7,7 +7,6 @@ const routes: Routes = [
   { path: 'home', loadChildren: './home/home.module#HomePageModule' },
   { path: 'login', loadChildren: './auth/login/login.module#LoginPageModule' },
   { path: 'register', loadChildren: './auth/register/register.module#RegisterPageModule' },
-  { path: 'reset', loadChildren: './auth/reset/reset.module#ResetPageModule' },
   { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardPageModule' },
   { path: 'records', loadChildren: './maintenance/records/records.module#RecordsPageModule' },
   { path: 'nearby', loadChildren: './nearby/nearby.module#NearbyPageModule' },
@@ -16,7 +15,8 @@ const routes: Routes = [
   { path: 'to-nearby', loadChildren: './to-nearby/to-nearby.module#ToNearbyPageModule' },
   { path: 'mt-progress', loadChildren: './mt-progress/mt-progress.module#MtProgressPageModule' },
   { path: 'to-mt-progress', loadChildren: './to-mt-progress/to-mt-progress.module#ToMtProgressPageModule' },
-  { path: 'test-progress-json', loadChildren: './test-progress-json/test-progress-json.module#TestProgressJsonPageModule' },  { path: 'test-nested', loadChildren: './test-nested/test-nested.module#TestNestedPageModule' },
+  { path: 'test-progress-json', loadChildren: './test-progress-json/test-progress-json.module#TestProgressJsonPageModule' },
+  { path: 'test-nested', loadChildren: './test-nested/test-nested.module#TestNestedPageModule' },
   { path: 'test-storage', loadChildren: './test-storage/test-storage.module#TestStoragePageModule' },
   { path: 'test-report', loadChildren: './test-report/test-report.module#TestReportPageModule' },
   { path: 'test-pause', loadChildren: './test-pause/test-pause.module#TestPausePageModule' }

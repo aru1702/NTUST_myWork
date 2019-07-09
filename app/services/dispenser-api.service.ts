@@ -33,7 +33,7 @@ export class DispenserAPIService {
     const postDataToken = {
       "UserName": "pwa_user001",
       "Password": "password"
-    }
+    };
 
     let getToken = await this.http.post(url, postDataToken).toPromise();
     return getToken['token'];
@@ -46,7 +46,20 @@ export class DispenserAPIService {
 
   async loginUser (email, password) {
     let url = this.urlUserLogin;
+    let respond = false;
 
+    const postBody = {
+      "Email": email,
+      "Password": password
+    };
+
+    let value = await this.http.post(url, postBody).toPromise();
+
+    if (value['code'] === 200) {
+      respond = true;
+    }
+    
+    return respond;
   }
 
   async getDispenserList () {

@@ -17,23 +17,27 @@ export class HomePage {
   constructor (
     private router: Router,
     private http: HttpClient,
-
     private pref: PreferenceManagerService
   ) {
     this.main();
   }
 
-  async main () {
+  main () {
+    this.checkSession();
+  }
+
+  async checkSession() {
     
     // check session ID and date
     let nowDate = new Date();
     let lastDate = await this.pref.getData(StaticVariable.KEY__LAST_DATE)
     let difDate = nowDate.getTime() - lastDate.getTime();
 
-    console.log(nowDate);
-    console.log(lastDate);
-    console.log(difDate);
-    console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
+    // check in console
+      // console.log(nowDate);
+      // console.log(lastDate);
+      // console.log(difDate);
+      // console.log(await this.pref.getData(StaticVariable.KEY__SESSION_ID));
 
     if (await this.pref.checkData(StaticVariable.KEY__SESSION_ID, null)) {
 
@@ -49,7 +53,7 @@ export class HomePage {
       this.pref.removeData(StaticVariable.KEY__SESSION_ID);
 
       // save the name of page
-      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, 'home');
+      this.pref.saveData(StaticVariable.KEY__LAST_PAGE, "home");
     } else {
 
       // save new Date
@@ -81,18 +85,18 @@ export class HomePage {
     this.router.navigate(['to-mt-progress']);
   }
 
-  async gettoken() {
-    let postData = {
-      "UserName": "pwa_user001",
-      "Password": "password"
-    }
+  // async gettoken() {
+  //   let postData = {
+  //     "UserName": "pwa_user001",
+  //     "Password": "password"
+  //   }
 
-    this.http.post("https://smartcampus.et.ntust.edu.tw:5425/Login", postData)
-      .subscribe(data => {
-        console.log(data['token']);
-        this.token = data['token'];
-       }, error => {
-        console.log(error);
-      });
-  }
+  //   this.http.post("https://smartcampus.et.ntust.edu.tw:5425/Login", postData)
+  //     .subscribe(data => {
+  //       console.log(data['token']);
+  //       this.token = data['token'];
+  //      }, error => {
+  //       console.log(error);
+  //     });
+  // }
 }

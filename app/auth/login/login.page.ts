@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http'
 import { PreferenceManagerService } from 'src/app/services/preference-manager.service';
 import { StaticVariable } from 'src/app/classes/static-variable';
+import { DispenserAPIService } from 'src/app/services/dispenser-api.service';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,12 @@ export class LoginPage {
 
   email: string = "";
   password: string = "";
-  resultData;
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private pref: PreferenceManagerService
+    private pref: PreferenceManagerService,
+    private api: DispenserAPIService
     ) { }
 
   ngOnInit() {
@@ -27,28 +28,39 @@ export class LoginPage {
   async login() {
     const { email, password } = this;
 
-    let postData = {
-      "Email" : email,
-      "Password" : password
-    }
+    let resultData = await this.api.loginUser(email, password);
+    console.log(resultData);
 
-    this.resultData = await this.http.post("https://smartcampus.et.ntust.edu.tw:5425/UserLogin", postData).toPromise();
+    if (resultData === true) {
 
-    console.log(this.resultData);
-
-    if (this.resultData['code'] == 200) {
-          
-      // go to dashboard
-      console.log("Login successed!")
-
-      this.saveSession(email);
+      // save the email into session_id
+      await this.pref.saveData(StaticVariable.KEY__SESSION_ID, email);
       
+      // save the date into last_date
       let nowDate = new Date();
-      this.saveLastDate(nowDate);
+      await this.pref.saveData(StaticVariable.KEY__LAST_DATE, nowDate);
 
-      this.router.navigate(['home']);
+      // get last page if exists
+      let lastPage = await this.pref.getData(StaticVariable.KEY__LAST_PAGE);
+        // console.log(lastPage);
+      if (lastPage === null) {
+
+        // if null route to home
+        this.router.navigate(['home']);
+
+      } else {
+
+        // delete last_page from preference
+        await this.pref.removeData(StaticVariable.KEY__LAST_PAGE);
+
+          // console.log(lastPage);
+        this.router.navigate([lastPage]);
+      }
+
+      console.log("Login successed!");
+
     } else {
-      console.log("Login failed!")
+      console.log("The email or password is incorrect!");
     }
 
   }
@@ -57,11 +69,11 @@ export class LoginPage {
     this.router.navigate(['register']); 
   }
 
-  async saveSession(id) {
-    await this.pref.saveData(StaticVariable.KEY__SESSION_ID, id);
-  }
+  // async saveSession(id) {
+  //   await this.pref.saveData(StaticVariable.KEY__SESSION_ID, id);
+  // }
 
-  async saveLastDate(date) {
-    await this.pref.saveData(StaticVariable.KEY__LAST_DATE, date);
-  }
+  // async saveLastDate(date) {
+  //   await this.pref.saveData(StaticVariable.KEY__LAST_DATE, date);
+  // }
 }
