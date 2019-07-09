@@ -6,7 +6,7 @@ export class StaticVariable {
     public static KEY__NEARBY_DISPENSER__DEVICE_ID = "nD_deviceId";
     public static KEY__MAINTENANCE_PROGRESS__DEVICE_ID = "mP_deviceId";
 
-    public static SESSION_TIMEOUT = 10000;
+    public static SESSION_TIMEOUT = 60000;
 
     public static KEY__CHECK_PREF_CREATED = "check_pref";
 }

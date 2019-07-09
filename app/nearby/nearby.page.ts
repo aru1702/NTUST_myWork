@@ -66,11 +66,20 @@ export class NearbyPage implements OnInit {
   }
 
   /**
+   * Go Back
+   */
+  backFunc() {
+    this.navCtrl.back();
+  }
+
+  /**
    * coldFilter() method is called when COLD button is pressed
    * - it will change boolean parameter for onlyCold
    * - it will adjust the conditionalFilter() method
    */
   coldFilter () {
+    this.checkSession();
+
     if (this.resultDone) {
       if (!this.onlyCold)
         this.onlyCold = true;
@@ -87,6 +96,8 @@ export class NearbyPage implements OnInit {
    * - it will adjust the conditionalFilter() method
    */
   warmFilter () {
+    this.checkSession();
+
     if (this.resultDone) {
       if (!this.onlyWarm)
         this.onlyWarm = true;
@@ -103,6 +114,8 @@ export class NearbyPage implements OnInit {
    * - it will adjust the conditionalFilter() method
    */
   hotFilter () {
+    this.checkSession();
+    
     if (this.resultDone) {
       if (!this.onlyHot)
         this.onlyHot = true;

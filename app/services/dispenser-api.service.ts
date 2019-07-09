@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +41,32 @@ export class DispenserAPIService {
 
   async registerNewUser (email, password, repassword) {
     let url = this.urlCreateUser;
+    let returnValue = false;
+
+    let token = await this.getToken();
+
+    const postDataRegister = {
+      "Email" : email,
+      "Password" : password
+    }
+    
+    if (password != repassword) {
+      console.log("Password not match!");
+    } else {
+      let httpOption = await {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': token
+        })
+      };
+      console.log(httpOption);
+    
+      return await this.http.post(url, postDataRegister, httpOption).subscribe(() => {
+        return true;
+      }, error => {
+        return false
+      });
+    }
 
   }
 
@@ -126,6 +152,7 @@ export class DispenserAPIService {
   async reportProblem (file, device_id, email, errorType, description) {
     let url = this.urlReportDispenserProblem;
 
+    // still under progress
   }
 
   async wantUpdateTrack (device_id, email, status) {
