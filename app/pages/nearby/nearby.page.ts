@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastController, NavController } from '@ionic/angular';
 
-import { PreferenceManagerService } from '../services/preference-manager.service';
-import { StaticVariable } from '../classes/static-variable';
-import { DispenserAPIService } from '../services/dispenser-api.service';
+import { PreferenceManagerService } from '../../services/PreferenceManager/preference-manager.service';
+import { StaticVariable } from '../../classes/StaticVariable/static-variable';
+import { DispenserAPIService } from '../../services/DispenserAPI/dispenser-api.service';
 
 @Component({
   selector: 'app-nearby',
@@ -12,11 +12,6 @@ import { DispenserAPIService } from '../services/dispenser-api.service';
   styleUrls: ['./nearby.page.scss'],
 })
 export class NearbyPage implements OnInit {
-
-  // // API
-  // urlNearby = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Nearby?Device_ID=';
-  // urlDetails = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Detail?Device_ID=';
-  // urlPicture = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
 
   // field
   public nearbySameBuilding = [];
@@ -30,9 +25,6 @@ export class NearbyPage implements OnInit {
   private resultDone: boolean = false;
 
   backgroundImg: any;
-
-  // dummy data for test
-  // selectedDeviceId: String = "MA_05_01";
 
   // get deviceId from entering page
   selectedDeviceId: string = "";
@@ -61,7 +53,6 @@ export class NearbyPage implements OnInit {
    * 
    */
   ionViewDidEnter() {
-    // console.log("ionViewDidEnter()");
     this.checkSession();
   }
 
@@ -219,10 +210,7 @@ export class NearbyPage implements OnInit {
    * @param   device_id id of the dispenser
    * @returns myJson    json of the nearby dispenser
    */
-  async getNearby (device_id) {
-    // let myUrl = this.urlNearby + device_id;
-    // let myJson = await this.http.get(myUrl).toPromise();
-    
+  async getNearby (device_id) {    
     let myJson = await this.api.getNearbyDispenser(device_id);
     return myJson;
   }
@@ -234,9 +222,6 @@ export class NearbyPage implements OnInit {
    * @returns myJson    json of dispenser's details
    */
   async getDetails (device_id) {
-    // let myUrl = this.urlDetails + device_id;
-    // let myJson = await this.http.get(myUrl).toPromise();
-
     let myJson = await this.api.getDispenserDetail(device_id);
     return myJson;
   }

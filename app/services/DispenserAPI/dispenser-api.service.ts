@@ -50,7 +50,7 @@ export class DispenserAPIService {
       "Password" : password
     }
     
-    if (password != repassword) {
+    if (password !== repassword) {
       console.log("Password not match!");
     } else {
       let httpOption = await {

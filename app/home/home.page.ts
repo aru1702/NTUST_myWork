@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { PreferenceManagerService } from '../services/preference-manager.service';
-import { StaticVariable } from '../classes/static-variable';
+import { PreferenceManagerService } from '../services/PreferenceManager/preference-manager.service';
+import { StaticVariable } from '../classes/StaticVariable/static-variable';
 
 @Component({
   selector: 'app-home',

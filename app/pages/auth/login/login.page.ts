@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular'
 
-import { PreferenceManagerService } from 'src/app/services/preference-manager.service';
-import { StaticVariable } from 'src/app/classes/static-variable';
-import { DispenserAPIService } from 'src/app/services/dispenser-api.service';
+import { PreferenceManagerService } from '../../../services/PreferenceManager/preference-manager.service';
+import { StaticVariable } from '../../../classes/StaticVariable/static-variable';
+import { DispenserAPIService } from '../../../services/DispenserAPI/dispenser-api.service';
 
 @Component({
   selector: 'app-login',

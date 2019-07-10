@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastController, NavController } from '@ionic/angular';
-import { PreferenceManagerService } from '../services/preference-manager.service';
-import { StaticVariable } from '../classes/static-variable';
-import { DispenserAPIService } from '../services/dispenser-api.service';
+
+import { PreferenceManagerService } from '../../services/PreferenceManager/preference-manager.service';
+import { StaticVariable } from '../../classes/StaticVariable/static-variable';
+import { DispenserAPIService } from '../../services/DispenserAPI/dispenser-api.service';
 
 @Component({
   selector: 'app-mt-progress',
@@ -11,10 +12,6 @@ import { DispenserAPIService } from '../services/dispenser-api.service';
   styleUrls: ['./mt-progress.page.scss'],
 })
 export class MtProgressPage implements OnInit {
-
-  // API url
-  // urlGetRepair: string = "https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Repair?Device_ID=";
-  // urlPicture: string = 'https://smartcampus.et.ntust.edu.tw:5425/Dispenser/Image?Device_ID=';
 
   /**
    * Array for details from Get Repair Condition
@@ -36,8 +33,6 @@ export class MtProgressPage implements OnInit {
 
   items: any = [];
   device_id: string = "";
-  // KEY_DEVICE_ID: string = "device_id";
-  // isDeviceIdExists: boolean = false;
   backgroundImg: any;
 
   constructor(
@@ -56,7 +51,6 @@ export class MtProgressPage implements OnInit {
    * 
    */
   ionViewDidEnter() {
-    // console.log("ionViewDidEnter()");
     this.checkSession();
   }
 
