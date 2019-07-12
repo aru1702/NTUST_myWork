@@ -17,7 +17,8 @@ const routes: Routes = [
   { path: 'test-nested', loadChildren: './test-nested/test-nested.module#TestNestedPageModule' },
   { path: 'test-storage', loadChildren: './test-storage/test-storage.module#TestStoragePageModule' },
   { path: 'test-report', loadChildren: './test-report/test-report.module#TestReportPageModule' },
-  { path: 'test-pause', loadChildren: './test-pause/test-pause.module#TestPausePageModule' }
+  { path: 'test-pause', loadChildren: './test-pause/test-pause.module#TestPausePageModule' },  { path: 'test-dispenser-api', loadChildren: './test-dispenser-api/test-dispenser-api.module#TestDispenserAPIPageModule' }
+
 
 ];
 
